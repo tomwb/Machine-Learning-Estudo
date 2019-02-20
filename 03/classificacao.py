@@ -11,7 +11,7 @@ Ydummies_df = Y_df
 X = Xdummies_df.values
 Y = Ydummies_df.values
 
-porcentagem_de_treino = 0.8
+porcentagem_de_treino = 0.9
 tamanho_de_treino = int(porcentagem_de_treino * len(Y))
 tamanho_de_teste = int(len(Y) - tamanho_de_treino)
 
