@@ -17,7 +17,19 @@ modelo.fit(dados, marcacoes)
 
 misterioso  = [1, 1, 1]
 misterioso2 = [1, 0, 0]
+misterioso3 = [0, 0, 1]
 
-teste = [misterioso, misterioso2]
+testes = [misterioso, misterioso2, misterioso3]
+marcacoes_teste = [-1, 1, -1]
 
-print(modelo.predict(teste))
+resultados = modelo.predict(testes)
+print(resultados)
+diferencas = resultados - marcacoes_teste
+print(diferencas)
+
+acertos = [d for d in diferencas if d==0]
+total_de_acertos = len(acertos)
+total_de_elementos = len(testes)
+
+taxa_de_acertos = 100 * total_de_acertos / total_de_elementos
+print(taxa_de_acertos)

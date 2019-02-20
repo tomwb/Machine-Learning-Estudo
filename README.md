@@ -6,8 +6,8 @@ instalar biblioteca https://scikit-learn.org/stable/
 sudo pip install scikit-learn
 ```
 
-testar
+### RUN
 
 ```
-python3 classificacao/01.py
+python 01/classificacao.py
 ```
