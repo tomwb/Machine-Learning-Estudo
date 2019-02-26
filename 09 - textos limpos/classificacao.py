@@ -3,19 +3,25 @@ from collections import Counter
 from sklearn.model_selection import cross_val_score
 import numpy as np
 import pandas as pd
+import nltk
 
-texto1 = "Se eu comprar cinco anos antecipados, eu ganho algum desconto?"
-texto2 = "O exercício 15 do curso de Java 1 está com a resposta errada. Pode conferir pf?"
-texto3 = "Existe algum curso para cuidar do marketing da minha empresa?"
+# nltk.download('punkt')
 
-classificacoes = pd.read_csv('08/emails.csv')
+classificacoes = pd.read_csv('09/emails.csv', encoding = 'utf-8')
 textosPuros = classificacoes['email']
-textosQuebrados = textosPuros.str.lower().str.split(' ')
+frases = textosPuros.str.lower()
+textosQuebrados = [nltk.tokenize.word_tokenize(frase) for frase in frases]
 
+# nltk.download('stopwords')
+stopwords = nltk.corpus.stopwords.words('portuguese')
+
+# nltk.download('rslp')
+stemmer = nltk.stem.RSLPStemmer()
 
 dicionario = set()
 for lista in textosQuebrados:
-	dicionario.update(lista)
+	validas = [stemmer.stem(palavra) for palavra in lista if palavra not in stopwords and len(palavra) > 2]
+	dicionario.update(validas)
 # print dicionario
 
 totalDePalavras = len(dicionario)
@@ -27,13 +33,16 @@ def vetorizar_texto(texto, tradutor):
 	vetor = [0] * len(tradutor)
 
 	for palavra in texto:
-		if palavra in tradutor:
-			posicao = tradutor[palavra]
-			vetor[posicao] += 1
+		if len(palavra) > 0:
+			raiz = stemmer.stem(palavra)
+			if raiz in tradutor:
+				posicao = tradutor[raiz]
+				vetor[posicao] += 1
 
 	return vetor
 
 vetoresDeTexto = [vetorizar_texto(texto, tradutor) for texto in textosQuebrados]
+# print vetoresDeTexto[0]
 marcas = classificacoes['classificacao']
 
 X = np.array(vetoresDeTexto)
@@ -44,7 +53,7 @@ porcentagem_de_treino = 0.8
 tamanho_do_treino = int(porcentagem_de_treino * len(Y))
 tamanho_de_validacao = len(Y) - tamanho_do_treino
 
-# print tamanho_do_treino
+print tamanho_do_treino
 
 treino_dados = X[0:tamanho_do_treino]
 treino_marcacoes = Y[0:tamanho_do_treino]
@@ -116,10 +125,3 @@ acerto_base = max(Counter(validacao_marcacoes).itervalues())
 taxa_de_acerto_base = 100.0 * acerto_base / len(validacao_marcacoes)
 print("Taxa de acerto base: %f" % taxa_de_acerto_base)
 print("Total de testes: %d " % len(validacao_dados))
-
-
-
-
-
-
-

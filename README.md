@@ -8,6 +8,7 @@ https://pandas.pydata.org/
 ```
 sudo pip install scikit-learn
 sudo pip install pandas
+sudo pip install nltk
 ```
 
 ### RUN
